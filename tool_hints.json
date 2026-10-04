@@ -1,0 +1,33 @@
+{
+  "_comment": "Routing-only descriptions, keyed by server__tool. Jev sees the hint instead of the server's own description; the LLM still gets the original schema. Use for tools whose descriptions are boilerplate, and to mark catch-all tools as a last resort.",
+
+  "notion__API-get-user": "Get one Notion workspace user by id.",
+  "notion__API-get-users": "List the users of the Notion workspace.",
+  "notion__API-get-self": "Get the Notion integration's own bot user.",
+  "notion__API-post-search": "Search Notion for pages and databases by title; use this to find a Notion page or doc by name before reading or editing it.",
+  "notion__API-get-block-children": "Read the content blocks of a Notion page or block.",
+  "notion__API-patch-block-children": "Append content (paragraphs, lists, etc.) to a Notion page.",
+  "notion__API-retrieve-a-block": "Get one Notion content block by id.",
+  "notion__API-update-a-block": "Edit one Notion content block.",
+  "notion__API-delete-a-block": "Delete one Notion content block.",
+  "notion__API-retrieve-a-page": "Get a Notion page's properties (title, status, dates) by page id.",
+  "notion__API-patch-page": "Update a Notion page's properties, e.g. status or title.",
+  "notion__API-post-page": "Create a new Notion page.",
+  "notion__API-retrieve-a-page-property": "Get one property value of a Notion page.",
+  "notion__API-retrieve-a-comment": "Read the comments on a Notion page or block.",
+  "notion__API-create-a-comment": "Add a comment to a Notion page or discussion.",
+  "notion__API-query-data-source": "Query the rows of a Notion database with filters and sorts.",
+  "notion__API-retrieve-a-data-source": "Get a Notion database's schema (its properties).",
+  "notion__API-update-a-data-source": "Change a Notion database's schema or title.",
+  "notion__API-create-a-data-source": "Create a new Notion database.",
+  "notion__API-list-data-source-templates": "List the page templates of a Notion database.",
+  "notion__API-retrieve-a-database": "Get a Notion database container and its data sources.",
+  "notion__API-move-page": "Move a Notion page under a different parent.",
+  "notion__API-retrieve-page-markdown": "Read a whole Notion page's content as Markdown.",
+  "notion__API-update-page-markdown": "Replace or edit a Notion page's content using Markdown.",
+
+  "grafana__grafana_api_request": "Last resort: raw HTTP call to the Grafana API, only when no dedicated Grafana tool (dashboards, annotations, alerting, incidents, Loki, Tempo...) covers the task.",
+  "kubernetes__kubectl_generic": "Last resort: arbitrary kubectl command, only when no dedicated kubectl tool (get, describe, logs, scale, rollout, apply, delete, patch...) covers the task.",
+  "sentry__execute_sentry_tool": "Last resort: run a long-tail Sentry operation found via search_sentry_tools, only when no direct Sentry tool (search_issues, search_events, update_issue, analyze_issue_with_seer...) fits.",
+  "sentry__search_sentry_tools": "Last resort: discover long-tail Sentry operations, only when no direct Sentry tool (search_issues, search_events, update_issue, analyze_issue_with_seer...) fits."
+}

@@ -1,0 +1,561 @@
+[
+ {
+  "name": "active_queries",
+  "description": "Active queries. This tool can determine currently active queries in the VictoriaMetrics instance.\nThis information is obtained from the \"/api/v1/status/active_queries\" HTTP endpoint of VictoriaMetrics API.",
+  "input_schema": {
+   "properties": {},
+   "required": [],
+   "type": "object"
+  }
+ },
+ {
+  "name": "alerts",
+  "description": "List of firing and pending alerts of the VictoriaMetrics instance. This tool uses `/api/v1/alerts` endpoint of vmalert API, proxied by VictoriaMetrics API.",
+  "input_schema": {
+   "properties": {
+    "group": {
+     "default": "",
+     "description": "Filter alerts by their group name. If not specified, all groups are included.",
+     "title": "Filter by alert group",
+     "type": "string"
+    },
+    "limit": {
+     "default": 0,
+     "description": "Maximum number of alerts to return. If not specified, all alerts are returned.",
+     "title": "Limit the number of alerts",
+     "type": "number"
+    },
+    "offset": {
+     "default": 0,
+     "description": "Number of alerts to skip before starting to collect the result set. Default is 0.",
+     "title": "Offset for pagination",
+     "type": "number"
+    },
+    "state": {
+     "default": "all",
+     "description": "Filter alerts by their state. Possible values: 'firing', 'pending', 'all'. Default is 'all'.",
+     "enum": [
+      "firing",
+      "pending",
+      "all"
+     ],
+     "title": "Filter by alert state",
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  }
+ },
+ {
+  "name": "documentation",
+  "description": "Search documentation resources for the given search query, returning the URIs of the resources that match the search criteria sorted by relevance. This tool can help to get context for any VictoriaMetrics related question.",
+  "input_schema": {
+   "properties": {
+    "limit": {
+     "default": 30,
+     "description": "Maximum number of results to return",
+     "minimum": 1,
+     "title": "Maximum number of results",
+     "type": "number"
+    },
+    "query": {
+     "description": "Query for search (for example, list of keywords)",
+     "title": "Search query",
+     "type": "string"
+    }
+   },
+   "required": [
+    "query"
+   ],
+   "type": "object"
+  }
+ },
+ {
+  "name": "explain_query",
+  "description": "Explain how MetricsQL query works",
+  "input_schema": {
+   "properties": {
+    "query": {
+     "description": "MetricsQL or PromQL expression for explanation",
+     "title": "MetricsQL or PromQL expression",
+     "type": "string"
+    }
+   },
+   "required": [
+    "query"
+   ],
+   "type": "object"
+  }
+ },
+ {
+  "name": "label_values",
+  "description": "List of label values from VictoriaMetrics instance for a provided label name. This tool uses `/api/v1/label/{labelName}/values` endpoint of VictoriaMetrics API.",
+  "input_schema": {
+   "properties": {
+    "end": {
+     "default": "",
+     "description": "End timestamp for selection labels values",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "End timestamp",
+     "type": "string"
+    },
+    "label_name": {
+     "description": "Name of the label to query its values",
+     "pattern": "^.+$",
+     "title": "Label name",
+     "type": "string"
+    },
+    "limit": {
+     "default": 0,
+     "description": "Maximum number of label values to return",
+     "minimum": 0,
+     "title": "Maximum number of label values",
+     "type": "number"
+    },
+    "match": {
+     "default": "",
+     "description": "Time series selector argument that selects the series from which to read the label values",
+     "title": "Match series for labels values",
+     "type": "string"
+    },
+    "start": {
+     "default": "",
+     "description": "Start timestamp for selection labels values",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "Start timestamp",
+     "type": "string"
+    }
+   },
+   "required": [
+    "label_name"
+   ],
+   "type": "object"
+  }
+ },
+ {
+  "name": "labels",
+  "description": "List of label names of the VictoriaMetrics instance. This tools uses `/api/v1/labels` endpoint of VictoriaMetrics API.",
+  "input_schema": {
+   "properties": {
+    "end": {
+     "default": "",
+     "description": "End timestamp for selection labels names",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "End timestamp",
+     "type": "string"
+    },
+    "limit": {
+     "default": 0,
+     "description": "Maximum number of label names to return",
+     "minimum": 0,
+     "title": "Maximum number of label names",
+     "type": "number"
+    },
+    "match": {
+     "default": "",
+     "description": "Time series selector argument that selects the series from which to read the label names",
+     "title": "Match series for label names",
+     "type": "string"
+    },
+    "start": {
+     "default": "",
+     "description": "Start timestamp for selection labels names",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "Start timestamp",
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  }
+ },
+ {
+  "name": "metric_statistics",
+  "description": "Statistics of metrics usage in queries of the VictoriaMetrics instance. This tool helps to identify unused (never queried) or rarely used metrics or conversely actively queried metrics. This tool uses `/api/v1/status/metric_names_stats` endpoint of VictoriaMetrics API.",
+  "input_schema": {
+   "properties": {
+    "le": {
+     "description": "less than or equal, is an integer threshold for filtering metric names by their usage count in queries. For example, with ?le=1 API returns metric names that were queried <=1 times.",
+     "title": "Less than or equal",
+     "type": "number"
+    },
+    "limit": {
+     "default": 1000,
+     "description": "Integer value to limit the number of metric names in response. By default, API returns 1000 records.",
+     "title": "Maximum number of metric names",
+     "type": "number"
+    },
+    "match_pattern": {
+     "default": "",
+     "description": "A regex pattern to match metric names for showing usage statistics. For example, ?match_pattern=vm_ will match any metric names with vm_ pattern, like vm_http_requests, max_vm_memory_available.",
+     "title": "A regex pattern to match metric names",
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  }
+ },
+ {
+  "name": "metrics",
+  "description": "List of available metrics of the VictoriaMetrics instance. This tool uses `/api/v1/label/__name__/values` endpoint of VictoriaMetrics API.",
+  "input_schema": {
+   "properties": {
+    "end": {
+     "default": "",
+     "description": "End timestamp for selection metric names",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "End timestamp",
+     "type": "string"
+    },
+    "limit": {
+     "default": 0,
+     "description": "Maximum number of metric names to return",
+     "minimum": 0,
+     "title": "Maximum number of metric names",
+     "type": "number"
+    },
+    "match": {
+     "default": "",
+     "description": "Time series selector argument that selects the series from which to read the metrics",
+     "title": "Match series for metric names",
+     "type": "string"
+    },
+    "start": {
+     "default": "",
+     "description": "Start timestamp for selection metric names",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "Start timestamp",
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  }
+ },
+ {
+  "name": "metrics_metadata",
+  "description": "Returns stored metrics details (metadata) such as name, type, help (description), and unit, and can be used to generate natural language queries. This tool uses `/api/v1/metadata` endpoint of VictoriaMetrics API.",
+  "input_schema": {
+   "properties": {
+    "limit": {
+     "default": 0,
+     "description": "Maximum number of metrics to return",
+     "minimum": 0,
+     "title": "Maximum number of metrics",
+     "type": "number"
+    },
+    "metric": {
+     "default": "",
+     "description": "A metric name to filter metadata for. All metric metadata is retrieved if left empty",
+     "title": "Metric name",
+     "type": "string"
+    },
+    "search": {
+     "default": "",
+     "description": "A keyword for search in description and metric name",
+     "title": "Search keyword",
+     "type": "string"
+    },
+    "type": {
+     "default": "",
+     "description": "The metric type by which the list of metrics will be filtered",
+     "title": "Metric type name",
+     "type": "string"
+    },
+    "unit": {
+     "default": "",
+     "description": "The unit by which the list of metrics will be filtered",
+     "title": "Unit name",
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  }
+ },
+ {
+  "name": "prettify_query",
+  "description": "Prettify (format) MetricsQL query. This tool uses `/prettify-query` endpoint of VictoriaMetrics API.",
+  "input_schema": {
+   "properties": {
+    "query": {
+     "description": "MetricsQL or PromQL expression for prettification. This is the query that will be formatted.",
+     "title": "MetricsQL or PromQL expression",
+     "type": "string"
+    }
+   },
+   "required": [
+    "query"
+   ],
+   "type": "object"
+  }
+ },
+ {
+  "name": "query",
+  "description": "Instant query executes PromQL or MetricsQL query expression at the given time. The result of Instant query is a list of time series matching the filter in query expression. Each returned series contains exactly one (timestamp, value) entry, where timestamp equals to the time query arg, while the value contains query result at the requested time. This tool uses `/api/v1/query` endpoint of VictoriaMetrics API.",
+  "input_schema": {
+   "properties": {
+    "nocache": {
+     "default": false,
+     "description": "If true, the query will not use the rollup cache on execution.",
+     "title": "Disable cache",
+     "type": "boolean"
+    },
+    "query": {
+     "description": "MetricsQL or PromQL expression for the query of the data",
+     "title": "MetricsQL or PromQL expression",
+     "type": "string"
+    },
+    "step": {
+     "description": "Optional interval for searching for raw samples in the past when executing the query (used when a sample is missing at the specified time). For example, the request /api/v1/query?query=up&step=1m looks for the last written raw sample for the metric up in the (now()-1m, now()] interval (the first millisecond is not included). If omitted, step is set to 5m (5 minutes) by default.",
+     "pattern": "^([0-9]+)([a-z]+)$",
+     "title": "Step",
+     "type": "string"
+    },
+    "time": {
+     "description": "Timestamp in millisecond precision to evaluate the query at. If omitted, time is set to now() (current timestamp). The time param can be specified in multiple allowed formats.",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "Timestamp",
+     "type": "string"
+    },
+    "timeout": {
+     "description": "Optional query timeout. For example, timeout=5s. Query is canceled when the timeout is reached. By default the timeout is set to the value of -search.maxQueryDuration command-line flag passed to single-node VictoriaMetrics or to vmselect component of VictoriaMetrics cluster.",
+     "pattern": "^([0-9]+)([a-z]+)$",
+     "title": "Timeout",
+     "type": "string"
+    },
+    "trace": {
+     "default": false,
+     "description": "If true, the query will be traced and the trace will be returned in the response. This is useful for debugging and performance analysis.",
+     "title": "Enable query trace",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "query"
+   ],
+   "type": "object"
+  }
+ },
+ {
+  "name": "query_range",
+  "description": "Range query executes the query expression at the given [start\u2026end] time range with the given step. The result of Range query is a list of time series matching the filter in query expression. Each returned series contains (timestamp, value) results for the query executed at start, start+step, start+2*step, \u2026, start+N*step timestamps. In other words, Range query is an Instant query executed independently at start, start+step, \u2026, start+N*step timestamps with the only difference that an instant query does not return ephemeral samples (see below). Instead, if the database does not contain any samples for the requested time and step, it simply returns an empty result. This tool uses `/api/v1/query_range` endpoint of VictoriaMetrics API.",
+  "input_schema": {
+   "properties": {
+    "end": {
+     "description": "The ending timestamp of the time range for query evaluation. If the end isn\u2019t set, then the end is automatically set to the current time.",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "End timestamp",
+     "type": "string"
+    },
+    "nocache": {
+     "default": false,
+     "description": "If true, the query will not use the rollup cache on execution.",
+     "title": "Disable cache",
+     "type": "boolean"
+    },
+    "query": {
+     "description": "MetricsQL or PromQL expression for the query of the data",
+     "title": "MetricsQL or PromQL expression",
+     "type": "string"
+    },
+    "start": {
+     "description": "The starting timestamp of the time range for query evaluation",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "Start timestamp",
+     "type": "string"
+    },
+    "step": {
+     "description": "the interval between data points, which must be returned from the range query. The query is executed at start, start+step, start+2*step, \u2026, start+N*step timestamps, where N is the whole number of steps that fit between start and end. end is included only when it equals to start+N*step. If the step isn\u2019t set, then it default to 5m (5 minutes).",
+     "pattern": "^([0-9]+)([a-z]+)$",
+     "title": "Step",
+     "type": "string"
+    },
+    "timeout": {
+     "description": "optional query timeout. For example, timeout=5s. Query is canceled when the timeout is reached. By default the timeout is set to the value of -search.maxQueryDuration command-line flag passed to single-node VictoriaMetrics or to vmselect component in VictoriaMetrics cluster.",
+     "pattern": "^([0-9]+)([a-z]+)$",
+     "title": "Timeout",
+     "type": "string"
+    },
+    "trace": {
+     "default": false,
+     "description": "If true, the query will be traced and the trace will be returned in the response. This is useful for debugging and performance analysis.",
+     "title": "Enable query trace",
+     "type": "boolean"
+    }
+   },
+   "required": [
+    "query",
+    "start"
+   ],
+   "type": "object"
+  }
+ },
+ {
+  "name": "rules",
+  "description": "List of alerting and recording rules of VictoriaMetrics instance. This tool uses `/api/v1/rules` endpoint of vmalert API proxied by VictoriaMetrics API.",
+  "input_schema": {
+   "properties": {
+    "exclude_alerts": {
+     "default": false,
+     "description": "Exclude alerts from the list",
+     "title": "Exclude alerts",
+     "type": "boolean"
+    },
+    "filter": {
+     "default": "",
+     "description": "Extra filter for rules with possible problems: unhealthy (rules that get some errors during evaluation) or noMatch (rules that don't match any time series)",
+     "enum": [
+      "unhealthy",
+      "noMatch"
+     ],
+     "title": "Extra filter for rules",
+     "type": "string"
+    },
+    "rule_files": {
+     "description": "Filter rules by file names",
+     "items": {
+      "type": "string"
+     },
+     "title": "Rule files",
+     "type": "array"
+    },
+    "rule_groups": {
+     "description": "Filter rules by group names",
+     "items": {
+      "type": "string"
+     },
+     "title": "Rule groups",
+     "type": "array"
+    },
+    "rule_names": {
+     "description": "Filter rules by name",
+     "items": {
+      "type": "string"
+     },
+     "title": "Rule names",
+     "type": "array"
+    },
+    "type": {
+     "default": "",
+     "description": "Rules type to be displayed: alert or record",
+     "enum": [
+      "alert",
+      "record"
+     ],
+     "title": "Rules type",
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  }
+ },
+ {
+  "name": "series",
+  "description": "List of available time series of the VictoriaMetrics instance. This tool uses `/api/v1/series` endpoint of VictoriaMetrics API.",
+  "input_schema": {
+   "properties": {
+    "end": {
+     "default": "",
+     "description": "End timestamp for selection time series",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "End timestamp",
+     "type": "string"
+    },
+    "limit": {
+     "default": 0,
+     "description": "Maximum number of time series to return",
+     "minimum": 0,
+     "title": "Maximum number of time series",
+     "type": "number"
+    },
+    "match": {
+     "default": "",
+     "description": "Time series selector argument that selects the series",
+     "title": "Match series",
+     "type": "string"
+    },
+    "start": {
+     "default": "",
+     "description": "Start timestamp for selection time series",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "Start timestamp",
+     "type": "string"
+    }
+   },
+   "required": [],
+   "type": "object"
+  }
+ },
+ {
+  "name": "top_queries",
+  "description": "Top queries.\nThis tool can determine top queries of the following query types:\n- the most frequently executed queries;\n- queries with the biggest average execution duration;\n- queries that took the most summary time for execution.\nThis information is obtained from the \"/api/v1/status/top_queries\" HTTP endpoint of VictoriaMetrics API.\n",
+  "input_schema": {
+   "properties": {
+    "maxLifetime": {
+     "default": "10m",
+     "description": "Max lifetime of the queries to be taken into account during stats calculation. By default is 10m.",
+     "pattern": "^([0-9]+)([a-z]+)$",
+     "title": "Max lifetime",
+     "type": "string"
+    },
+    "topN": {
+     "default": 20,
+     "description": "The number of top entries to return in the response. By default is 20.",
+     "minimum": 1,
+     "title": "Top N",
+     "type": "number"
+    }
+   },
+   "required": [
+    "topN"
+   ],
+   "type": "object"
+  }
+ },
+ {
+  "name": "tsdb_status",
+  "description": "The following tool returns various cardinality statistics about the VictoriaMetrics TSDB:\n- Metric names with the highest number of series.\n- Labels with the highest number of series.\n- Values with the highest number of series for the selected label (aka focusLabel).\n- label=name pairs with the highest number of series.\n- Labels with the highest number of unique values.\n\nThis tool returns TSDB stats from \"/api/v1/status/tsdb\" endpoint of VictoriaMetrics API (in the way similar to Prometheus).\n",
+  "input_schema": {
+   "properties": {
+    "date": {
+     "default": "",
+     "description": "The date for collecting the stats. By default, the stats is collected for the current day. Pass date=1970-01-01 in order to collect global stats across all the days.",
+     "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+     "title": "Date",
+     "type": "string"
+    },
+    "extraLabel": {
+     "default": "",
+     "description": "Optional extra_label=<label_name>=<label_value> query arg, which can be used for enforcing additional label filters for queries. For example, /api/v1/query_range?extra_label=user_id=123&extra_label=group_id=456&query=<query> would automatically add {user_id=\"123\",group_id=\"456\"} label filters to the given <query>. This functionality can be used for limiting the scope of time series visible to the given tenant.",
+     "title": "Extra label",
+     "type": "string"
+    },
+    "focusLabel": {
+     "default": "",
+     "description": "Returns label values with the highest number of time series for the given label name in the seriesCountByFocusLabelValue list.",
+     "title": "Focus label",
+     "type": "string"
+    },
+    "match": {
+     "default": "",
+     "description": "Arbitrary time series selector for series to take into account during stats calculation. By default all the series are taken into account.",
+     "title": "Match series selector",
+     "type": "string"
+    },
+    "topN": {
+     "default": 10,
+     "description": "is the number of top entries to return in the response",
+     "minimum": 1,
+     "title": "Top N",
+     "type": "number"
+    }
+   },
+   "required": [],
+   "type": "object"
+  }
+ }
+]

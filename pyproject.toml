@@ -1,0 +1,17 @@
+[project]
+name = "jev-mcp-router"
+version = "0.1.0"
+description = "Jev (TypeSafe AI's System One decision model) as the tool and skill selection layer for MCP"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+dependencies = [
+    "httpx>=0.28.1",
+    "mcp>=2.3",  # uses the 2.x API (mcp.Client, mcp.server.mcpserver)
+    "python-dotenv>=1.2.4",
+]
+
+[dependency-groups]
+bench = [
+    "fastembed>=0.8.1",
+]

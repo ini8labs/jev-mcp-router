@@ -1,0 +1,5 @@
+{
+  "mcpServers": {
+    "jev-router": { "command": "uv", "args": ["run", "python", "-m", "jevmcp", "serve"] }
+  }
+}

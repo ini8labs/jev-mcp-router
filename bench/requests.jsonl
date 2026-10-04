@@ -1,0 +1,111 @@
+{"request": "What's the p99 latency of the checkout service over the last 3 hours in Prometheus?", "needs": [["prometheus__execute_range_query"]]}
+{"request": "Show me error logs for the payments service from VictoriaLogs in the last 30 minutes", "needs": [["victorialogs__query"]]}
+{"request": "How many error logs per minute has payments produced today, according to VictoriaLogs?", "needs": [["victorialogs__hits", "victorialogs__stats_query_range"]]}
+{"request": "What alerts are currently firing in VictoriaMetrics?", "needs": [["victoriametrics__alerts"]]}
+{"request": "Explain what this MetricsQL query does: sum(rate(http_requests_total[5m])) by (job)", "needs": [["victoriametrics__explain_query", "victoriametrics__documentation"]]}
+{"request": "Which metrics have the highest cardinality in VictoriaMetrics?", "needs": [["victoriametrics__tsdb_status"]]}
+{"request": "Which queries are slowest on our VictoriaMetrics instance right now?", "needs": [["victoriametrics__top_queries", "victoriametrics__active_queries"]]}
+{"request": "List the alerting and recording rules configured in VictoriaMetrics", "needs": [["victoriametrics__rules"]]}
+{"request": "Are all Prometheus scrape targets up?", "needs": [["prometheus__get_targets"]]}
+{"request": "Find the Grafana dashboard for the checkout service", "needs": [["grafana__search_dashboards"]]}
+{"request": "What queries do the panels of the 'API Overview' Grafana dashboard run?", "needs": [["grafana__search_dashboards"], ["grafana__get_dashboard_panel_queries"]]}
+{"request": "Query Loki for errors from the ingress-nginx app in the last hour", "needs": [["grafana__query_loki_logs"]]}
+{"request": "Find slow requests in Tempo traces for the cart service", "needs": [["grafana__find_slow_requests", "grafana__search_tempo_traces"]]}
+{"request": "Who is on call right now in Grafana OnCall?", "needs": [["grafana__get_current_oncall_users"]]}
+{"request": "Silence the DiskSpaceLow alert in Grafana for 2 hours", "needs": [["grafana__alerting_manage_silences"]]}
+{"request": "Add an annotation in Grafana marking the 14:00 deploy of payments v2.14.1", "needs": [["grafana__create_annotation"]]}
+{"request": "Show me the CPU profile of the search service from Pyroscope", "needs": [["grafana__query_pyroscope"]]}
+{"request": "Declare a Grafana incident for the checkout outage", "needs": [["grafana__create_incident"]]}
+{"request": "What error patterns show up in the Loki logs for payments?", "needs": [["grafana__find_error_pattern_logs", "grafana__query_loki_patterns"]]}
+{"request": "Are all of our Grafana datasources healthy?", "needs": [["grafana__check_datasources_health"]]}
+{"request": "Which Datadog monitors are currently alerting?", "needs": [["datadog__get_monitors"]]}
+{"request": "Query Datadog for the average CPU of the web hosts over the last 4 hours", "needs": [["datadog__query_metrics"]]}
+{"request": "Schedule a Datadog downtime for host db-3 tonight from 1am to 3am", "needs": [["datadog__schedule_downtime"]]}
+{"request": "How is the page load performance of our checkout page in Datadog RUM?", "needs": [["datadog__get_rum_page_performance"]]}
+{"request": "List Datadog APM traces with errors for the cart service", "needs": [["datadog__list_traces"]]}
+{"request": "Find the Sentry issues with the most events in the backend project this week", "needs": [["sentry__search_issues"]]}
+{"request": "Ask Sentry's Seer to find the root cause of issue BACKEND-4F2", "needs": [["sentry__analyze_issue_with_seer"]]}
+{"request": "Mark Sentry issue FRONTEND-91 as resolved", "needs": [["sentry__update_issue"]]}
+{"request": "Which CloudWatch alarms are firing right now?", "needs": [["aws_cloudwatch__get_active_alarms"]]}
+{"request": "Run a CloudWatch Logs Insights query counting 5xx responses in /aws/lambda/checkout over the last day", "needs": [["aws_cloudwatch__execute_log_insights_query"]]}
+{"request": "Show the state history of the HighCPU alarm in CloudWatch", "needs": [["aws_cloudwatch__get_alarm_history"]]}
+{"request": "What alarms do you recommend I set on the RDS CPUUtilization metric in CloudWatch?", "needs": [["aws_cloudwatch__get_recommended_metric_alarms"]]}
+{"request": "Get the CPUUtilization of RDS instance db-prod over the last day from CloudWatch", "needs": [["aws_cloudwatch__get_metric_data"]]}
+{"request": "Who is on call for the payments escalation policy in PagerDuty?", "needs": [["pagerduty__list_oncalls"]]}
+{"request": "List the open PagerDuty incidents for the checkout service", "needs": [["pagerduty__list_incidents"]]}
+{"request": "Add a note to PagerDuty incident Q1ABC saying the rollback is done", "needs": [["pagerduty__add_note_to_incident"]]}
+{"request": "Create a PagerDuty schedule override so Priya covers my on-call shift on Saturday", "needs": [["pagerduty__create_schedule_override", "pagerduty__create_schedule_v3_overrides"]]}
+{"request": "What changed right before PagerDuty incident Q2XYZ? Show the related change events", "needs": [["pagerduty__list_incident_change_events"]]}
+{"request": "What were the MTTA and MTTR for the payments service in PagerDuty last month?", "needs": [["pagerduty__get_incident_metrics_by_service"]]}
+{"request": "Post an update to our PagerDuty status page that checkout is degraded", "needs": [["pagerduty__create_status_page_post", "pagerduty__create_status_page_post_update"]]}
+{"request": "Which pods in the payments namespace are crash looping?", "needs": [["kubernetes__kubectl_get"]]}
+{"request": "Show me the logs of the checkout-7d9f pod in the prod namespace", "needs": [["kubernetes__kubectl_logs"]]}
+{"request": "Scale the checkout deployment to 10 replicas", "needs": [["kubernetes__kubectl_scale"]]}
+{"request": "Roll back the payments deployment to its previous revision", "needs": [["kubernetes__kubectl_rollout"]]}
+{"request": "Describe the api ingress in the prod namespace", "needs": [["kubernetes__kubectl_describe"]]}
+{"request": "Upgrade the redis helm release to chart version 18.2", "needs": [["kubernetes__upgrade_helm_chart"]]}
+{"request": "Port-forward the postgres service in the cluster to localhost:5432", "needs": [["kubernetes__port_forward"]]}
+{"request": "What's the latest version of the hashicorp/aws Terraform provider?", "needs": [["terraform__get_latest_provider_version"]]}
+{"request": "Find a Terraform registry module for an AWS VPC", "needs": [["terraform__search_modules"]]}
+{"request": "List the open pull requests in acme/checkout", "needs": [["github__list_pull_requests", "github__search_pull_requests"]]}
+{"request": "Why did the latest GitHub Actions run fail on main in acme/payments?", "needs": [["github__actions_list", "github__actions_get"], ["github__get_job_logs"]]}
+{"request": "Open a GitHub issue in acme/checkout about the latency regression", "needs": [["github__issue_write"]]}
+{"request": "Merge PR #482 in acme/payments", "needs": [["github__merge_pull_request"]]}
+{"request": "Search the code in the acme GitHub org for usages of PAYMENTS_DB_POOL_SIZE", "needs": [["github__search_code"]]}
+{"request": "Show me the open Dependabot alerts for acme/checkout", "needs": [["github__list_dependabot_alerts"]]}
+{"request": "What changed in the last 10 commits of acme/payments on GitHub?", "needs": [["github__list_commits"]]}
+{"request": "Request a Copilot review on PR #77 in acme/web", "needs": [["github__request_copilot_review"]]}
+{"request": "What's in the latest release of acme/cli on GitHub?", "needs": [["github__get_latest_release"]]}
+{"request": "Read the README of the acme/infra repo on GitHub", "needs": [["github__get_file_contents"]]}
+{"request": "Comment on GitHub issue #31 in acme/checkout that the fix is deployed", "needs": [["github__add_issue_comment"]]}
+{"request": "Which files have I changed in my local git repo that aren't staged yet?", "needs": [["git__git_status", "git__git_diff_unstaged"]]}
+{"request": "Commit my staged changes locally with the message 'fix pool size'", "needs": [["git__git_commit"]]}
+{"request": "Create a local git branch called hotfix/pool and switch to it", "needs": [["git__git_create_branch"], ["git__git_checkout"]]}
+{"request": "Create a Jira bug in the PAY project for the connection pool exhaustion", "needs": [["atlassian__jira_create_issue"]]}
+{"request": "What's in the current sprint on the CHECKOUT Jira board?", "needs": [["atlassian__jira_get_sprint_issues", "atlassian__jira_get_board_issues", "atlassian__jira_search"]]}
+{"request": "Move Jira ticket PAY-1432 to Done", "needs": [["atlassian__jira_transition_issue"]]}
+{"request": "Log 2 hours of work on PAY-1432", "needs": [["atlassian__jira_add_worklog"]]}
+{"request": "Find Confluence pages about the payments runbook", "needs": [["atlassian__confluence_search"]]}
+{"request": "Create a Confluence postmortem page for today's checkout incident", "needs": [["atlassian__confluence_create_page", "atlassian__confluence_create_page_from_template"]]}
+{"request": "Is Jira ticket PAY-1500 still within its SLA?", "needs": [["atlassian__jira_get_issue_sla"]]}
+{"request": "Show all Jira issues assigned to me that are in progress", "needs": [["atlassian__jira_search"]]}
+{"request": "Search Notion for the on-call handbook", "needs": [["notion__API-post-search"]]}
+{"request": "Add a comment on the Notion page 'Q4 roadmap' saying it's approved", "needs": [["notion__API-post-search"], ["notion__API-create-a-comment"]]}
+{"request": "Post in the #incidents Slack channel that checkout is recovering", "needs": [["slack__slack_post_message"]]}
+{"request": "What has been discussed in the #payments-eng Slack channel today?", "needs": [["slack__slack_get_channel_history"]]}
+{"request": "Reply in the Slack incident thread that the rollback finished", "needs": [["slack__slack_reply_to_thread"]]}
+{"request": "How many orders were created yesterday? Query the orders table in Postgres", "needs": [["postgres__query"]]}
+{"request": "What's the schema of the users collection in MongoDB?", "needs": [["mongodb__collection-schema"]]}
+{"request": "Explain the MongoDB query plan for finding orders by status", "needs": [["mongodb__explain"]]}
+{"request": "Create an index on the email field of the MongoDB users collection", "needs": [["mongodb__create-index"]]}
+{"request": "List the tables in my Supabase project", "needs": [["supabase__list_tables"]]}
+{"request": "Apply a Supabase migration that adds a 'refunded' column to orders", "needs": [["supabase__apply_migration"]]}
+{"request": "Show the Supabase API logs with errors from the last hour", "needs": [["supabase__query_logs"]]}
+{"request": "Run the Supabase security advisors on my project", "needs": [["supabase__get_advisors"]]}
+{"request": "Deploy the send-receipt edge function to Supabase", "needs": [["supabase__deploy_edge_function"]]}
+{"request": "What time is it in Tokyo right now?", "needs": [["time__get_current_time"]]}
+{"request": "Convert 3pm New York time to Indian Standard Time", "needs": [["time__convert_time"]]}
+{"request": "Fetch https://status.stripe.com and tell me if there's an outage", "needs": [["fetch__fetch", "playwright__browser_navigate"]]}
+{"request": "Take a screenshot of our staging checkout page at https://staging.acme.io/checkout", "needs": [["playwright__browser_navigate"], ["playwright__browser_take_screenshot"]]}
+{"request": "Read the file /tmp/config.yaml", "needs": [["filesystem__read_text_file", "filesystem__read_file"]]}
+{"request": "Find all .log files under /tmp", "needs": [["filesystem__search_files"]]}
+{"request": "How do I clean up effects with useEffect in React? Check the latest React docs", "needs": [["context7__resolve-library-id"], ["context7__query-docs"]]}
+{"request": "Remember that Priya owns the payments service", "needs": [["memory__create_entities", "memory__add_observations"]]}
+{"request": "How long is the drive from Pune to Mumbai?", "needs": [["google_maps__maps_distance_matrix", "google_maps__maps_directions"]]}
+{"request": "Checkout is slow: check its p99 latency in Prometheus and its error logs in VictoriaLogs", "needs": [["prometheus__execute_range_query", "prometheus__execute_query"], ["victorialogs__query"]]}
+{"request": "Payments is throwing 500s. Check Sentry for new issues, look at the payments pod logs in Kubernetes, and post a summary to #incidents on Slack", "needs": [["sentry__search_issues"], ["kubernetes__kubectl_logs"], ["slack__slack_post_message"]]}
+{"request": "Did the last deploy cause the error spike? Check recent commits to acme/payments on GitHub and the 5xx rate in Prometheus", "needs": [["github__list_commits"], ["prometheus__execute_range_query"]]}
+{"request": "Create a Jira ticket for the checkout outage that includes the details of PagerDuty incident Q1ABC", "needs": [["atlassian__jira_create_issue"], ["pagerduty__get_incident"]]}
+{"request": "Who is on call for payments in PagerDuty? Post their name in #payments-eng on Slack", "needs": [["pagerduty__list_oncalls"], ["slack__slack_post_message"]]}
+{"request": "Roll back the payments deployment in Kubernetes and add a Grafana annotation for the rollback", "needs": [["kubernetes__kubectl_rollout"], ["grafana__create_annotation"]]}
+{"request": "Compare the error log counts in VictoriaLogs with the 5xx rate in VictoriaMetrics for checkout over the last hour", "needs": [["victorialogs__hits", "victorialogs__stats_query_range"], ["victoriametrics__query_range"]]}
+{"request": "The CloudWatch HighLatency alarm fired. Check its alarm history and query the Lambda logs with Logs Insights", "needs": [["aws_cloudwatch__get_alarm_history"], ["aws_cloudwatch__execute_log_insights_query"]]}
+{"request": "Find the Sentry issue for the NullPointerException in checkout and open a GitHub issue for it in acme/checkout", "needs": [["sentry__search_issues"], ["github__issue_write"]]}
+{"request": "Write a postmortem page in Confluence from the timeline of PagerDuty incident Q2XYZ", "needs": [["pagerduty__get_incident", "pagerduty__list_log_entries"], ["atlassian__confluence_create_page", "atlassian__confluence_create_page_from_template"]]}
+{"request": "Check the Supabase logs for slow database queries and create a Jira task to fix them", "needs": [["supabase__query_logs"], ["atlassian__jira_create_issue"]]}
+{"request": "Are there any alerts firing right now?", "needs": [["victoriametrics__alerts", "grafana__list_alert_groups", "grafana__alerting_manage_rules", "aws_cloudwatch__get_active_alarms", "datadog__get_monitors", "pagerduty__list_incidents"]]}
+{"request": "Who's on call right now?", "needs": [["pagerduty__list_oncalls", "grafana__get_current_oncall_users"]]}
+{"request": "Show me the open incidents", "needs": [["pagerduty__list_incidents", "grafana__list_incidents", "datadog__list_incidents"]]}
+{"request": "What's the difference between a histogram and a summary in Prometheus?", "needs": []}
+{"request": "Write me a haiku about being on call", "needs": []}
+{"request": "Explain what an SLO error budget is", "needs": []}

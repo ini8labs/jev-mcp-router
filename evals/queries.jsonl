@@ -1,0 +1,17 @@
+{"request": "Why was checkout so slow around 2pm today?", "tools": ["prometheus__execute_range_query", "victorialogs__query"], "skills": ["latency-investigation"]}
+{"request": "What is the current request rate of the cart service?", "tools": ["prometheus__execute_query"], "skills": []}
+{"request": "Show me the error logs from payments in the last hour", "tools": ["victorialogs__query"], "skills": []}
+{"request": "How many error log lines per 5 minutes did payments produce in the last hour?", "tools": ["victorialogs__hits"], "skills": []}
+{"request": "Which services does Prometheus scrape, and are they all up?", "tools": ["prometheus__get_targets"], "skills": []}
+{"request": "What metrics do we have about the database connection pool?", "tools": ["prometheus__list_metrics"], "skills": []}
+{"request": "There's a spike of 5xx errors on payments, what happened?", "tools": ["prometheus__execute_range_query", "victorialogs__query"], "skills": ["error-spike-triage"]}
+{"request": "Did the payments deploy this afternoon cause the regression?", "tools": ["victorialogs__query", "prometheus__execute_range_query"], "skills": ["deploy-regression-check"]}
+{"request": "Which service is producing the most error logs right now?", "tools": ["victorialogs__facets"], "skills": []}
+{"request": "What is the log retention configured in VictoriaLogs?", "tools": ["victorialogs__flags"], "skills": []}
+{"request": "What fields can I filter payments logs on?", "tools": ["victorialogs__field_names"], "skills": []}
+{"request": "Is the Prometheus MCP server healthy?", "tools": ["prometheus__health_check"], "skills": []}
+{"request": "What does the http_request_duration_seconds_bucket metric measure?", "tools": ["prometheus__get_metric_metadata"], "skills": []}
+{"request": "How do I write a LogsQL query that counts errors by service?", "tools": ["victorialogs__documentation"], "skills": []}
+{"request": "Plot CPU usage of the search service over the last 6 hours", "tools": ["prometheus__execute_range_query"], "skills": []}
+{"request": "We expect 3x traffic for the sale next quarter, will our CPU and memory hold?", "tools": ["prometheus__execute_range_query"], "skills": ["capacity-planning"]}
+{"request": "What's the difference between a counter and a gauge in Prometheus?", "tools": [], "skills": []}

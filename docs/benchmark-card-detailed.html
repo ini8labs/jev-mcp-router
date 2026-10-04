@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jev MCP Routing Benchmark</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --surface-0: #0b0c0e;
+    --surface-1: #111214;
+    --surface-2: #17181b;
+    --line: #24262a;
+    --grid: #1e2023;
+    --text-primary: #f4f4f2;
+    --text-secondary: #b9b8b1;
+    --text-muted: #85847d;
+    --jev: #3987e5;        /* categorical slot 1 (dark): the highlighted router */
+    --jev-soft: rgba(57, 135, 229, 0.14);
+    --other: #5c5b56;      /* neutral context bars */
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1350px; background: var(--surface-0); }
+  body {
+    font-family: "Inter", system-ui, sans-serif;
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    padding: 64px 64px 48px;
+    display: flex; flex-direction: column;
+    background:
+      radial-gradient(900px 500px at 85% -10%, rgba(57,135,229,0.16), transparent 60%),
+      var(--surface-0);
+  }
+  .eyebrow {
+    font: 600 15px/1 "JetBrains Mono", monospace; letter-spacing: .14em;
+    color: var(--jev); text-transform: uppercase;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .eyebrow::before { content: ""; width: 28px; height: 2px; background: var(--jev); }
+  h1 {
+    margin-top: 22px; font-weight: 800; font-size: 54px; line-height: 1.04; letter-spacing: -0.035em;
+  }
+  h1 em { font-style: normal; color: var(--jev); }
+  .sub {
+    margin-top: 18px; font-size: 19px; line-height: 1.45; color: var(--text-secondary); max-width: 900px;
+  }
+  .sub b { color: var(--text-primary); font-weight: 600; }
+
+  .stats { margin-top: 36px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .stat {
+    background: var(--surface-1); border: 1px solid var(--line); border-radius: 16px;
+    padding: 24px 24px 22px; position: relative; overflow: hidden;
+  }
+  .stat::after { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--jev); }
+  .stat .n { font-weight: 800; font-size: 56px; line-height: 1; letter-spacing: -0.04em; }
+  .stat .n small { font-size: 30px; font-weight: 700; color: var(--text-secondary); margin-left: 2px; }
+  .stat .k { margin-top: 12px; font-size: 16px; font-weight: 600; line-height: 1.3; }
+  .stat .d { margin-top: 6px; font: 500 13px/1.4 "JetBrains Mono", monospace; color: var(--text-muted); }
+
+  .grid { margin-top: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+  .panel {
+    background: var(--surface-1); border: 1px solid var(--line); border-radius: 16px;
+    padding: 24px 26px 20px; display: flex; flex-direction: column;
+  }
+  .panel h2 { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+  .panel .note { margin-top: 4px; font-size: 13px; color: var(--text-muted); }
+  .bars { margin-top: 20px; display: flex; flex-direction: column; gap: 14px; flex: 1; justify-content: center; }
+  .row { display: grid; grid-template-columns: 128px 1fr; align-items: center; gap: 12px; }
+  .row .name { font-size: 13.5px; color: var(--text-secondary); line-height: 1.2; }
+  .row.jev .name { color: var(--text-primary); font-weight: 700; }
+  .track { position: relative; height: 24px; display: flex; align-items: center; }
+  .bar { height: 24px; background: var(--other); border-radius: 0 4px 4px 0; min-width: 4px; }
+  .row.jev .bar { background: var(--jev); }
+  .val { margin-left: 10px; font: 600 13.5px/1 "JetBrains Mono", monospace; color: var(--text-secondary); white-space: nowrap; }
+  .row.jev .val { color: var(--text-primary); }
+  .head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .tag { font: 700 11px/1 "Inter"; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--jev); background: var(--jev-soft); padding: 6px 9px; border-radius: 7px; white-space: nowrap; margin-top: -2px;
+  }
+
+  footer {
+    margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line);
+    display: grid; grid-template-columns: 1fr auto; gap: 24px; align-items: end;
+    font-size: 12.5px; line-height: 1.55; color: var(--text-muted);
+  }
+  footer b { color: var(--text-secondary); font-weight: 600; }
+  .mono { font-family: "JetBrains Mono", monospace; }
+</style>
+</head>
+<body>
+  <div class="eyebrow">Benchmark · MCP tool routing</div>
+  <h1>Let a decision model pick<br>the tools, <em>not the LLM.</em></h1>
+  <p class="sub">
+    <b>Jev</b> (TypeSafe AI's System One model) answers a yes/no question per MCP server and per tool,
+    and the LLM only sees the tools it said yes to. Tested on <b>649 real tools from 25 MCP servers</b>
+    with <b>111 labeled requests</b>.
+  </p>
+
+  <section class="stats">
+    <div class="stat">
+      <div class="n">205<small>×</small></div>
+      <div class="k">smaller tool context per LLM turn</div>
+      <div class="d">201,202 → 981 tokens</div>
+    </div>
+    <div class="stat">
+      <div class="n">32<small>×</small></div>
+      <div class="k">cheaper routing than Claude Sonnet 5</div>
+      <div class="d">$0.0101 → $0.0003 / request</div>
+    </div>
+    <div class="stat">
+      <div class="n">95<small>%</small></div>
+      <div class="k">of requests got every tool they needed</div>
+      <div class="d">Sonnet 99% · Haiku 93%</div>
+    </div>
+  </section>
+
+  <section class="grid">
+    <!-- Bar widths are value / panel max, computed below from data-v. -->
+    <div class="panel">
+      <div class="head"><h2>Tool tokens in LLM context</h2><span class="tag">Jev: 205× less</span></div>
+      <div class="note">Tool-schema tokens per turn. Lower is better.</div>
+      <div class="bars" data-max="201202">
+        <div class="row"><div class="name">No routing<br>(all 649 tools)</div><div class="track"><div class="bar" data-v="201202"></div><span class="val">201,202</span></div></div>
+        <div class="row"><div class="name">Embeddings top-20</div><div class="track"><div class="bar" data-v="6598"></div><span class="val">6,598</span></div></div>
+        <div class="row jev"><div class="name">Jev</div><div class="track"><div class="bar" data-v="981"></div><span class="val">981</span></div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="head"><h2>Routing cost per request</h2><span class="tag">Jev: 32× less vs Sonnet 5</span></div>
+      <div class="note">USD, LLM catalog prompt cached. Lower is better.</div>
+      <div class="bars" data-max="0.01007">
+        <div class="row"><div class="name">Claude Sonnet 5</div><div class="track"><div class="bar" data-v="0.01007"></div><span class="val">$0.0101</span></div></div>
+        <div class="row"><div class="name">Claude Haiku 4.5</div><div class="track"><div class="bar" data-v="0.00308"></div><span class="val">$0.0031</span></div></div>
+        <div class="row"><div class="name">GPT-5 nano</div><div class="track"><div class="bar" data-v="0.00030"></div><span class="val">$0.0003</span></div></div>
+        <div class="row jev"><div class="name">Jev</div><div class="track"><div class="bar" data-v="0.00031"></div><span class="val">$0.0003</span></div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="head"><h2>Requests with every needed tool picked</h2></div>
+      <div class="note">111 requests, 1–3 tools each. Higher is better.</div>
+      <div class="bars" data-max="100">
+        <div class="row"><div class="name">Claude Sonnet 5</div><div class="track"><div class="bar" data-v="99.1"></div><span class="val">99%</span></div></div>
+        <div class="row jev"><div class="name">Jev</div><div class="track"><div class="bar" data-v="94.6"></div><span class="val">95%</span></div></div>
+        <div class="row"><div class="name">Claude Haiku 4.5</div><div class="track"><div class="bar" data-v="92.8"></div><span class="val">93%</span></div></div>
+        <div class="row"><div class="name">GPT-5 nano</div><div class="track"><div class="bar" data-v="85.6"></div><span class="val">86%</span></div></div>
+        <div class="row"><div class="name">Embeddings top-20</div><div class="track"><div class="bar" data-v="84.7"></div><span class="val">85%</span></div></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="head"><h2>Routing latency, median</h2><span class="tag">Jev: 37% faster vs Sonnet 5</span></div>
+      <div class="note">Seconds, all under concurrent load. Lower is better.</div>
+      <div class="bars" data-max="3.24">
+        <div class="row"><div class="name">Claude Sonnet 5</div><div class="track"><div class="bar" data-v="3.24"></div><span class="val">3.2 s</span></div></div>
+        <div class="row"><div class="name">GPT-5 nano</div><div class="track"><div class="bar" data-v="3.19"></div><span class="val">3.2 s</span></div></div>
+        <div class="row jev"><div class="name">Jev</div><div class="track"><div class="bar" data-v="2.03"></div><span class="val">2.0 s</span></div></div>
+        <div class="row"><div class="name">Claude Haiku 4.5</div><div class="track"><div class="bar" data-v="1.81"></div><span class="val">1.8 s</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div>
+      <b>Setup.</b> Tool lists pulled live from GitHub, Grafana, PagerDuty, Jira/Confluence, Kubernetes, Datadog,
+      Sentry, CloudWatch, Prometheus, VictoriaLogs, VictoriaMetrics, Supabase, MongoDB, Notion, Slack and 10 more.
+      Jev routes in two steps (servers, then tools). LLM routers got the same catalog with prompt caching on.
+      Single run; requests hand-labeled. Jev on an idle connection: 0.8–1.1 s. 
+    </div>
+    <div class="mono" style="text-align:right">Oct 2026</div>
+  </footer>
+
+<script>
+  // Width = value / panel max, so every bar is drawn to scale from its own data-v.
+  // One scale per panel: reserve the widest row's label space on every row.
+  document.querySelectorAll(".bars").forEach(group => {
+    const max = parseFloat(group.dataset.max);
+    const rows = [...group.querySelectorAll(".row")];
+    const labelW = row => [...row.querySelectorAll(".val")].reduce((w, el) => w + el.offsetWidth + 10, 0);
+    const room = rows[0].querySelector(".track").clientWidth - Math.max(...rows.map(labelW));
+    rows.forEach(row => {
+      const bar = row.querySelector(".bar");
+      bar.style.width = Math.max(4, (parseFloat(bar.dataset.v) / max) * room) + "px";
+    });
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Jev MCP Routing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --surface-0: #0b0c0e;
+    --surface-1: #111214;
+    --line: #24262a;
+    --text-primary: #f4f4f2;
+    --text-secondary: #b9b8b1;
+    --text-muted: #85847d;
+    --jev: #3987e5;
+    --other: #5c5b56;
+    --dot-off: #26282c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { width: 1080px; height: 1350px; }
+  body {
+    font-family: "Inter", system-ui, sans-serif; color: var(--text-primary);
+    -webkit-font-smoothing: antialiased; padding: 68px 68px 52px;
+    display: flex; flex-direction: column;
+    background: radial-gradient(900px 520px at 88% -8%, rgba(57,135,229,0.17), transparent 60%), var(--surface-0);
+  }
+  .eyebrow { font: 600 15px/1 "JetBrains Mono", monospace; letter-spacing: .14em; color: var(--jev);
+             text-transform: uppercase; display: flex; align-items: center; gap: 12px; }
+  .eyebrow::before { content: ""; width: 28px; height: 2px; background: var(--jev); }
+  h1 { margin-top: 24px; font-weight: 800; font-size: 60px; line-height: 1.02; letter-spacing: -0.04em; }
+  h1 em { font-style: normal; color: var(--jev); }
+  .sub { margin-top: 20px; font-size: 21px; line-height: 1.45; color: var(--text-secondary); max-width: 900px; }
+  .sub b { color: var(--text-primary); font-weight: 600; }
+
+  /* Without / With */
+  .vs { margin-top: 40px; display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 18px; }
+  .card { background: var(--surface-1); border: 1px solid var(--line); border-radius: 18px; padding: 26px 28px; }
+  .card.with { border-color: rgba(57,135,229,0.45); }
+  .label { font: 700 13px/1 "Inter"; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); }
+  .with .label { color: var(--jev); }
+  .what { margin-top: 10px; font-size: 20px; font-weight: 600; line-height: 1.3; }
+  .dots { margin-top: 20px; display: grid; grid-template-columns: repeat(33, 8px); gap: 4px; }
+  .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--dot-off); }
+  .without .dots i { background: var(--other); }
+  .with .dots i.on { background: var(--jev); box-shadow: 0 0 0 3px rgba(57,135,229,0.3); }
+  .big { margin-top: 22px; display: flex; align-items: baseline; gap: 10px; }
+  .big .n { font-size: 46px; font-weight: 800; letter-spacing: -0.035em; line-height: 1; }
+  .with .big .n { color: var(--jev); }
+  .big .u { font-size: 16px; color: var(--text-secondary); }
+
+  /* Outcome */
+  .outcome { margin-top: 40px; }
+  .outcome h2 { font-size: 15px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--text-muted); }
+  .metric { display: grid; grid-template-columns: 210px 1fr 180px; align-items: center; gap: 24px;
+            padding: 30px 0; border-bottom: 1px solid var(--line); }
+  .metric:last-child { border-bottom: 0; }
+  .metric .q { font-size: 20px; font-weight: 600; line-height: 1.25; }
+  .pair { display: flex; flex-direction: column; gap: 8px; }
+  .bar-row { display: grid; grid-template-columns: 40px 1fr; align-items: center; gap: 10px; }
+  .who { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+  .bar-row.jev .who { color: var(--text-primary); }
+  .track { display: flex; align-items: center; }
+  .bar { height: 18px; border-radius: 0 4px 4px 0; background: var(--other); min-width: 4px; }
+  .bar-row.jev .bar { background: var(--jev); }
+  .val { margin-left: 10px; font: 600 14px/1 "JetBrains Mono", monospace; color: var(--text-secondary); white-space: nowrap; }
+  .bar-row.jev .val { color: var(--text-primary); }
+  .verdict { text-align: right; }
+  .verdict .v { font-size: 30px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; color: var(--jev); }
+  .verdict .v.neutral { color: var(--text-secondary); }
+  .verdict .s { margin-top: 6px; font-size: 13px; color: var(--text-muted); }
+
+  footer { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--line);
+           font-size: 12.5px; line-height: 1.6; color: var(--text-muted); }
+  footer b { color: var(--text-secondary); font-weight: 600; }
+</style>
+</head>
+<body>
+  <div class="eyebrow">Benchmark · AI agents + MCP</div>
+  <h1>Your AI agent doesn't need<br>to read <em>every tool.</em></h1>
+  <p class="sub">
+    Before an agent acts, something must decide which tools to use. Usually the <b>LLM</b> reads every
+    tool, every time. We let <b>Jev</b>, a small decision model, make that call instead.
+  </p>
+
+  <section class="vs">
+    <div class="card without">
+      <div class="label">Without Jev</div>
+      <div class="what">The LLM reads all 649 tools</div>
+      <div class="dots" id="dots-without"></div>
+      <div class="big"><span class="n">201,202</span><span class="u">tokens per turn</span></div>
+    </div>
+    <div class="card with">
+      <div class="label">With Jev</div>
+      <div class="what">Jev hands it the ~3 that matter</div>
+      <div class="dots" id="dots-with"></div>
+      <div class="big"><span class="n">981</span><span class="u">tokens per turn</span></div>
+    </div>
+  </section>
+
+  <section class="outcome">
+    <h2>The outcome, per request</h2>
+
+    <div class="metric">
+      <div class="q">Cost to choose<br>the tools</div>
+      <div class="pair" data-max="0.01007">
+        <div class="bar-row"><span class="who">LLM</span><div class="track"><div class="bar" data-v="0.01007"></div><span class="val">$0.0101</span></div></div>
+        <div class="bar-row jev"><span class="who">Jev</span><div class="track"><div class="bar" data-v="0.00031"></div><span class="val">$0.0003</span></div></div>
+      </div>
+      <div class="verdict"><div class="v">32× cheaper</div></div>
+    </div>
+
+    <div class="metric">
+      <div class="q">Time to choose<br>the tools</div>
+      <div class="pair" data-max="3.24">
+        <div class="bar-row"><span class="who">LLM</span><div class="track"><div class="bar" data-v="3.24"></div><span class="val">3.2 s</span></div></div>
+        <div class="bar-row jev"><span class="who">Jev</span><div class="track"><div class="bar" data-v="2.03"></div><span class="val">2.0 s</span></div></div>
+      </div>
+      <div class="verdict"><div class="v">37% faster</div></div>
+    </div>
+
+    <div class="metric">
+      <div class="q">Picked every tool<br>it needed</div>
+      <div class="pair" data-max="100">
+        <div class="bar-row"><span class="who">LLM</span><div class="track"><div class="bar" data-v="99.1"></div><span class="val">99%</span></div></div>
+        <div class="bar-row jev"><span class="who">Jev</span><div class="track"><div class="bar" data-v="94.6"></div><span class="val">95%</span></div></div>
+      </div>
+      <div class="verdict"><div class="v neutral">−4 pts</div><div class="s">close, not equal</div></div>
+    </div>
+  </section>
+
+  <footer>
+    <b>How we tested.</b> 649 real tools from 25 MCP servers (GitHub, Grafana, PagerDuty, Jira, Kubernetes, Sentry,
+    Prometheus, VictoriaLogs and more), 111 hand-labeled requests, one run. <b>LLM</b> = Claude Sonnet 5 choosing from the
+    full catalog, prompt cached. <b>Jev</b> = TypeSafe AI's System One decision model. Also tested: Claude Haiku 4.5
+    (93%, $0.003, 1.8 s), GPT-5 nano (86%, $0.0003, 3.2 s). Oct 2026.
+  </footer>
+
+<script>
+  // 649 dots, one per tool. "With Jev" lights 3 (Jev picked 2.6 tools per request on average).
+  const fill = (id, on) => {
+    const el = document.getElementById(id);
+    for (let i = 0; i < 649; i++) {
+      const d = document.createElement("i");
+      if (on.has(i)) d.className = "on";
+      el.appendChild(d);
+    }
+  };
+  fill("dots-without", new Set());
+  fill("dots-with", new Set([214, 377, 512]));
+
+  // Bars share one scale per metric; label space is reserved on both rows.
+  document.querySelectorAll(".pair").forEach(pair => {
+    const max = parseFloat(pair.dataset.max);
+    const rows = [...pair.querySelectorAll(".bar-row")];
+    const labelW = Math.max(...rows.map(r => r.querySelector(".val").offsetWidth + 10));
+    const room = rows[0].querySelector(".track").clientWidth - labelW;
+    rows.forEach(r => {
+      const bar = r.querySelector(".bar");
+      bar.style.width = Math.max(4, parseFloat(bar.dataset.v) / max * room) + "px";
+    });
+  });
+</script>
+</body>
+</html>

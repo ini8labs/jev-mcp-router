@@ -1,0 +1,512 @@
+[
+ {
+  "name": "documentation",
+  "description": "Search documentation resources for the given search query, returning the URIs of the resources that match the search criteria sorted by relevance. This tool can help to get context for any VictoriaLogs related question.",
+  "input_schema": {
+   "properties": {
+    "limit": {
+     "default": 30,
+     "description": "Maximum number of results to return",
+     "minimum": 1,
+     "title": "Maximum number of results",
+     "type": "number"
+    },
+    "query": {
+     "description": "Query for search (for example, list of keywords)",
+     "title": "Search query",
+     "type": "string"
+    }
+   },
+   "required": [
+    "query"
+   ],
+   "type": "object"
+  }
+ },
+ {
+  "name": "facets",
+  "description": "The most frequent values per each log field seen in the logs returned by the given <query> on the given [<start> ... <end>] time range. This tool uses `/select/logsql/facets` endpoint of VictoriaLogs API.",
+  "input_schema": {
+   "properties": {
+    "end": {
+     "description": "End timestamp in RFC3339 format. For example, 2023-10-01T00:00:00Z",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "End timestamp",
+     "type": "string"
+    },
+    "keep_const_fields": {
+     "description": "By default the facets tool doesn\u2019t return log fields, which contain the same constant value across all the logs matching the given query. Add keep_const_fields=true arg if you need such log fields",
+     "title": "Keep constant fields",
+     "type": "boolean"
+    },
+    "limit": {
+     "description": "The number of values per each log field can be controlled via limit arg.",
+     "title": "Limit",
+     "type": "number"
+    },
+    "max_value_len": {
+     "description": "The facets tool ignores log fields, which contain too long values. The limit on the per-field value length can be controlled via max_value_len arg.",
+     "title": "Max value length",
+     "type": "number"
+    },
+    "max_values_per_field": {
+     "description": "The facets tool ignores log fields, which contain too big number of unique values, since they can consume a lot of RAM to track. The limit on the number of unique values per each log field can be controlled via max_values_per_field arg.",
+     "title": "Max values per field",
+     "type": "number"
+    },
+    "query": {
+     "description": "LogsQL expression for the query of the logs data",
+     "title": "LogsQL expression",
+     "type": "string"
+    },
+    "start": {
+     "description": "Start timestamp in RFC3339 format. For example, 2023-10-01T00:00:00Z",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "Start timestamp",
+     "type": "string"
+    },
+    "tenant": {
+     "default": "0:0",
+     "description": "Name of the tenant for which the data will be displayed (format AccountID:ProjectID)",
+     "pattern": "^([0-9]+)(:[0-9]+)$",
+     "title": "Tenant name (Account ID and Project ID)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "query",
+    "start",
+    "end"
+   ],
+   "type": "object"
+  }
+ },
+ {
+  "name": "field_names",
+  "description": "Get field names from results of the given <query> on the given [<start> ... <end>] time range. The response also contains the number of log results per every field name. This tool uses `/select/logsql/field_names` endpoint of VictoriaLogs API.",
+  "input_schema": {
+   "properties": {
+    "end": {
+     "description": "End timestamp in RFC3339. If <end> is missing, then it equals to the maximum timestamp across logs stored in VictoriaLogs.",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "End timestamp",
+     "type": "string"
+    },
+    "query": {
+     "description": "LogsQL expression for the query of the logs streams",
+     "title": "LogsQL expression",
+     "type": "string"
+    },
+    "start": {
+     "description": "Start timestamp in RFC3339",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "Start timestamp",
+     "type": "string"
+    },
+    "tenant": {
+     "default": "0:0",
+     "description": "Name of the tenant for which the data will be displayed (format AccountID:ProjectID)",
+     "pattern": "^([0-9]+)(:[0-9]+)$",
+     "title": "Tenant name (Account ID and Project ID)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "query",
+    "start"
+   ],
+   "type": "object"
+  }
+ },
+ {
+  "name": "field_values",
+  "description": "Get unique values for the given <fieldName> field from results of the given <query> on the given [<start> ... <end>] time range. The response also contains the number of log results per every field value. This tool uses `/select/logsql/field_values` endpoint of VictoriaLogs API.",
+  "input_schema": {
+   "properties": {
+    "end": {
+     "description": "End timestamp in RFC3339. If <end> is missing, then it equals to the maximum timestamp across logs stored in VictoriaLogs.",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "End timestamp",
+     "type": "string"
+    },
+    "field": {
+     "description": "Field name of for getting field values.",
+     "title": "Field name",
+     "type": "string"
+    },
+    "limit": {
+     "description": "The maximum number of returned values.",
+     "title": "Limit of values",
+     "type": "number"
+    },
+    "query": {
+     "description": "LogsQL expression for the query of the logs streams",
+     "title": "LogsQL expression",
+     "type": "string"
+    },
+    "start": {
+     "description": "Start timestamp in RFC3339",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "Start timestamp",
+     "type": "string"
+    },
+    "tenant": {
+     "default": "0:0",
+     "description": "Name of the tenant for which the data will be displayed (format AccountID:ProjectID)",
+     "pattern": "^([0-9]+)(:[0-9]+)$",
+     "title": "Tenant name (Account ID and Project ID)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "query",
+    "start",
+    "field"
+   ],
+   "type": "object"
+  }
+ },
+ {
+  "name": "flags",
+  "description": "List of non-default flags (parameters) of the VictoriaLogs instance. This tools uses `/flags` endpoint of VictoriaLogs API.",
+  "input_schema": {
+   "properties": {},
+   "required": [],
+   "type": "object"
+  }
+ },
+ {
+  "name": "hits",
+  "description": "The number of matching log entries for the given <query> on the given [<start> ... <end>] time range grouped by <step> buckets. The returned results are sorted by time. This tool uses `/select/logsql/hits` endpoint of VictoriaLogs API.",
+  "input_schema": {
+   "properties": {
+    "end": {
+     "description": "End timestamp in RFC3339 format. For example, 2023-10-01T00:00:00Z",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "End timestamp",
+     "type": "string"
+    },
+    "field": {
+     "description": "Additionally, any number of field=<field_name> args can be passed to /select/logsql/hits for grouping hits buckets by the mentioned <field_name> fields. The grouped fields are put inside 'fields' object of response.",
+     "items": {
+      "type": "string"
+     },
+     "title": "Field",
+     "type": "array"
+    },
+    "fields_limit": {
+     "description": "Optional fields_limit=N query arg can be passed for limiting the number of unique 'fields' groups to return to N. If more than N unique 'fields' groups is found, then top N 'fields' groups with the maximum number of 'total' hits are returned. The remaining hits are returned in 'fields': {} group.",
+     "title": "fields_limit",
+     "type": "number"
+    },
+    "query": {
+     "description": "LogsQL expression for the query of the logs data",
+     "title": "LogsQL expression",
+     "type": "string"
+    },
+    "start": {
+     "description": "Start timestamp in RFC3339 format. For example, 2023-10-01T00:00:00Z",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "Start timestamp",
+     "type": "string"
+    },
+    "step": {
+     "default": "1d",
+     "description": "The step is used to group the log entries by time. For example, 60s means that the log entries counts will be grouped by 1 minute bucket. Default is 1d.",
+     "pattern": "^([0-9]+)([a-z]+)$",
+     "title": "Step",
+     "type": "string"
+    },
+    "tenant": {
+     "default": "0:0",
+     "description": "Name of the tenant for which the data will be displayed (format AccountID:ProjectID)",
+     "pattern": "^([0-9]+)(:[0-9]+)$",
+     "title": "Tenant name (Account ID and Project ID)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "query",
+    "start"
+   ],
+   "type": "object"
+  }
+ },
+ {
+  "name": "query",
+  "description": "Executes LogsQL query expression to search log entries. This tool uses `/select/logsql/query` endpoint of VictoriaLogs API.",
+  "input_schema": {
+   "properties": {
+    "end": {
+     "description": "End timestamp in RFC3339 format. For example, 2023-10-01T00:00:00Z",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "End timestamp",
+     "type": "string"
+    },
+    "limit": {
+     "default": 1000,
+     "description": "The maximum number of log entries, which can be returned in the response",
+     "title": "Limit",
+     "type": "number"
+    },
+    "query": {
+     "description": "LogsQL expression for the query of the logs data",
+     "title": "LogsQL expression",
+     "type": "string"
+    },
+    "start": {
+     "description": "Start timestamp in RFC3339 format. For example, 2023-10-01T00:00:00Z",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "Start timestamp",
+     "type": "string"
+    },
+    "tenant": {
+     "default": "0:0",
+     "description": "Name of the tenant for which the data will be displayed (format AccountID:ProjectID)",
+     "pattern": "^([0-9]+)(:[0-9]+)$",
+     "title": "Tenant name (Account ID and Project ID)",
+     "type": "string"
+    },
+    "timeout": {
+     "description": "Optional query timeout. For example, timeout=5s. Query is canceled when the timeout is reached. ",
+     "pattern": "^([0-9]+)([a-z]+)$",
+     "title": "Timeout",
+     "type": "string"
+    }
+   },
+   "required": [
+    "query",
+    "start"
+   ],
+   "type": "object"
+  }
+ },
+ {
+  "name": "stats_query",
+  "description": "Log stats for the given query at the given timestamp (time) in the format compatible with Prometheus querying API. This tool uses `/select/logsql/stats_query` endpoint of VictoriaLogs API.",
+  "input_schema": {
+   "properties": {
+    "query": {
+     "description": "LogsQL expression that must contain stats pipe. The calculated stats is converted into metrics with labels from by(...) clause of the | stats by(...) pipe.",
+     "title": "LogsQL expression",
+     "type": "string"
+    },
+    "tenant": {
+     "default": "0:0",
+     "description": "Name of the tenant for which the data will be displayed (format AccountID:ProjectID)",
+     "pattern": "^([0-9]+)(:[0-9]+)$",
+     "title": "Tenant name (Account ID and Project ID)",
+     "type": "string"
+    },
+    "time": {
+     "description": "Time in RFC3339. If it's missing, then it equals to the current time.",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "Query time",
+     "type": "string"
+    }
+   },
+   "required": [
+    "query"
+   ],
+   "type": "object"
+  }
+ },
+ {
+  "name": "stats_query_range",
+  "description": "Log stats for the given query on the given [start ... end] time range with the given step interval. The stats is returned in the format compatible with Prometheus querying API. This tool uses `/select/logsql/stats_query_range` endpoint of VictoriaLogs API.",
+  "input_schema": {
+   "properties": {
+    "end": {
+     "description": "End timestamp in RFC3339. If <end> is missing, then it equals to the maximum timestamp across logs stored in VictoriaLogs.",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "End timestamp",
+     "type": "string"
+    },
+    "query": {
+     "description": "LogsQL expression that must contain stats pipe. The calculated stats is converted into metrics with labels from by(...) clause of the | stats by(...) pipe.",
+     "title": "LogsQL expression",
+     "type": "string"
+    },
+    "start": {
+     "description": "Start timestamp in RFC3339",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "Start timestamp",
+     "type": "string"
+    },
+    "step": {
+     "default": "1d",
+     "description": "Step interval for returning the stats. ",
+     "pattern": "^([0-9]+)([a-z]+)$",
+     "title": "Step interval",
+     "type": "string"
+    },
+    "tenant": {
+     "default": "0:0",
+     "description": "Name of the tenant for which the data will be displayed (format AccountID:ProjectID)",
+     "pattern": "^([0-9]+)(:[0-9]+)$",
+     "title": "Tenant name (Account ID and Project ID)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "query",
+    "start"
+   ],
+   "type": "object"
+  }
+ },
+ {
+  "name": "stream_field_names",
+  "description": "Get log stream field names from results of the given <query> on the given [<start> ... <end>] time range. The response also contains the number of log results per every field name.. This tool uses `/select/logsql/stream_field_names` endpoint of VictoriaLogs API.",
+  "input_schema": {
+   "properties": {
+    "end": {
+     "description": "End timestamp in RFC3339. If <end> is missing, then it equals to the maximum timestamp across logs stored in VictoriaLogs.",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "End timestamp",
+     "type": "string"
+    },
+    "query": {
+     "description": "LogsQL expression for the query of the logs streams",
+     "title": "LogsQL expression",
+     "type": "string"
+    },
+    "start": {
+     "description": "Start timestamp in RFC3339",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "Start timestamp",
+     "type": "string"
+    },
+    "tenant": {
+     "default": "0:0",
+     "description": "Name of the tenant for which the data will be displayed (format AccountID:ProjectID)",
+     "pattern": "^([0-9]+)(:[0-9]+)$",
+     "title": "Tenant name (Account ID and Project ID)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "query",
+    "start"
+   ],
+   "type": "object"
+  }
+ },
+ {
+  "name": "stream_field_values",
+  "description": "Get unique values for the given <fieldName> field from results of the given <query> on the given [<start> ... <end>] time range. The response also contains the number of log results per every field value. This tool uses `/select/logsql/stream_field_values` endpoint of VictoriaLogs API.",
+  "input_schema": {
+   "properties": {
+    "end": {
+     "description": "End timestamp in RFC3339. If <end> is missing, then it equals to the maximum timestamp across logs stored in VictoriaLogs.",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "End timestamp",
+     "type": "string"
+    },
+    "field": {
+     "description": "Field name of log stream for getting field values.",
+     "title": "Field name",
+     "type": "string"
+    },
+    "query": {
+     "description": "LogsQL expression for the query of the logs streams",
+     "title": "LogsQL expression",
+     "type": "string"
+    },
+    "start": {
+     "description": "Start timestamp in RFC3339",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "Start timestamp",
+     "type": "string"
+    },
+    "tenant": {
+     "default": "0:0",
+     "description": "Name of the tenant for which the data will be displayed (format AccountID:ProjectID)",
+     "pattern": "^([0-9]+)(:[0-9]+)$",
+     "title": "Tenant name (Account ID and Project ID)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "query",
+    "start",
+    "field"
+   ],
+   "type": "object"
+  }
+ },
+ {
+  "name": "stream_ids",
+  "description": "Get _stream_id values for the log streams from results of the given <query> on the given [<start> ... <end>] time range. The response also contains the number of log results per every _stream_id. This tool uses `/select/logsql/stream_ids` endpoint of VictoriaLogs API.",
+  "input_schema": {
+   "properties": {
+    "end": {
+     "description": "End timestamp in RFC3339. If <end> is missing, then it equals to the maximum timestamp across logs stored in VictoriaLogs.",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "End timestamp",
+     "type": "string"
+    },
+    "query": {
+     "description": "LogsQL expression for the query of the logs streams",
+     "title": "LogsQL expression",
+     "type": "string"
+    },
+    "start": {
+     "description": "Start timestamp in RFC3339",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "Start timestamp",
+     "type": "string"
+    },
+    "tenant": {
+     "default": "0:0",
+     "description": "Name of the tenant for which the data will be displayed (format AccountID:ProjectID)",
+     "pattern": "^([0-9]+)(:[0-9]+)$",
+     "title": "Tenant name (Account ID and Project ID)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "query",
+    "start"
+   ],
+   "type": "object"
+  }
+ },
+ {
+  "name": "streams",
+  "description": "Get log streams from results of the given <query> on the given [<start> ... <end>] time range. The response also contains the number of log results per every _stream. This tool uses `/select/logsql/streams` endpoint of VictoriaLogs API.",
+  "input_schema": {
+   "properties": {
+    "end": {
+     "description": "End timestamp in RFC3339. If <end> is missing, then it equals to the maximum timestamp across logs stored in VictoriaLogs.",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "End timestamp",
+     "type": "string"
+    },
+    "query": {
+     "description": "LogsQL expression for the query of the logs streams",
+     "title": "LogsQL expression",
+     "type": "string"
+    },
+    "start": {
+     "description": "Start timestamp in RFC3339",
+     "pattern": "^((?:(\\d{4}-\\d{2}-\\d{2})T(\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?))(Z|[\\+-]\\d{2}:\\d{2})?)|([0-9]+)$",
+     "title": "Start timestamp",
+     "type": "string"
+    },
+    "tenant": {
+     "default": "0:0",
+     "description": "Name of the tenant for which the data will be displayed (format AccountID:ProjectID)",
+     "pattern": "^([0-9]+)(:[0-9]+)$",
+     "title": "Tenant name (Account ID and Project ID)",
+     "type": "string"
+    }
+   },
+   "required": [
+    "query",
+    "start"
+   ],
+   "type": "object"
+  }
+ }
+]

@@ -1,0 +1,22 @@
+{
+  "mcpServers": {
+    "prometheus": {
+      "description": "Prometheus: PromQL metric queries, metric names and metadata, scrape targets",
+      "command": "uv",
+      "args": [
+        "run",
+        "python",
+        "mock_servers/prometheus.py"
+      ]
+    },
+    "victorialogs": {
+      "description": "VictoriaLogs: log search with LogsQL, log stats, log fields and streams",
+      "command": "uv",
+      "args": [
+        "run",
+        "python",
+        "mock_servers/victorialogs.py"
+      ]
+    }
+  }
+}

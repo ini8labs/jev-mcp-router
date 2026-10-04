@@ -1,0 +1,211 @@
+[
+ {
+  "name": "health_check",
+  "description": "Health check endpoint for container monitoring and status verification",
+  "input_schema": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {}
+  }
+ },
+ {
+  "name": "execute_query",
+  "description": "Execute a PromQL instant query against Prometheus",
+  "input_schema": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "query": {
+     "type": "string",
+     "description": "PromQL query string"
+    },
+    "time": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Optional RFC3339 or Unix timestamp (default: current time)"
+    }
+   },
+   "required": [
+    "query"
+   ]
+  }
+ },
+ {
+  "name": "execute_range_query",
+  "description": "Execute a PromQL range query with start time, end time, and step interval",
+  "input_schema": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "query": {
+     "type": "string",
+     "description": "PromQL query string"
+    },
+    "start": {
+     "type": "string",
+     "description": "Start time as RFC3339 or Unix timestamp"
+    },
+    "end": {
+     "type": "string",
+     "description": "End time as RFC3339 or Unix timestamp"
+    },
+    "step": {
+     "type": "string",
+     "description": "Query resolution step width (e.g., '15s', '1m', '1h')"
+    }
+   },
+   "required": [
+    "query",
+    "start",
+    "end",
+    "step"
+   ]
+  }
+ },
+ {
+  "name": "list_metrics",
+  "description": "List all available metrics in Prometheus with optional pagination support",
+  "input_schema": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "limit": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Maximum number of metrics to return (default: all metrics)"
+    },
+    "offset": {
+     "default": 0,
+     "type": "integer",
+     "description": "Number of metrics to skip for pagination (default: 0)"
+    },
+    "filter_pattern": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Optional substring to filter metric names (case-insensitive)"
+    },
+    "refresh_cache": {
+     "default": false,
+     "type": "boolean",
+     "description": "Force a cache refresh to pick up newly scraped metrics (default: False)"
+    }
+   }
+  }
+ },
+ {
+  "name": "get_metric_metadata",
+  "description": "Get metadata (type, help, unit) for metrics. Returns all metric metadata when no metric name is provided. Use filter_pattern to search metric names and descriptions.",
+  "input_schema": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "metric": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Optional metric name. If provided, returns legacy list format."
+    },
+    "filter_pattern": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Optional substring filter on metric name and descriptions."
+    },
+    "limit": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Maximum number of metrics to return in bulk mode."
+    },
+    "offset": {
+     "default": 0,
+     "type": "integer",
+     "description": "Number of metrics to skip in bulk mode."
+    }
+   }
+  }
+ },
+ {
+  "name": "get_targets",
+  "description": "Get scrape targets, with state/pool filtering and optional pagination",
+  "input_schema": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "state": {
+     "default": "active",
+     "type": "string",
+     "description": "Which targets to request from Prometheus - \"active\" (default),\n\"dropped\", or \"any\". This is applied server-side by Prometheus."
+    },
+    "scrape_pool": {
+     "anyOf": [
+      {
+       "type": "string"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Optional scrape pool name to restrict results to, applied\nserver-side by Prometheus."
+    },
+    "limit": {
+     "anyOf": [
+      {
+       "type": "integer"
+      },
+      {
+       "type": "null"
+      }
+     ],
+     "default": null,
+     "description": "Maximum number of targets to return per category (default: all)"
+    },
+    "offset": {
+     "default": 0,
+     "type": "integer",
+     "description": "Number of targets to skip for pagination (default: 0)"
+    }
+   }
+  }
+ }
+]

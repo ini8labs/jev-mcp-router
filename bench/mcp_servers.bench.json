@@ -1,0 +1,252 @@
+{
+  "mcpServers": {
+    "prometheus": {
+      "description": "Prometheus: PromQL metric queries, metric names and metadata, scrape targets",
+      "command": "uvx",
+      "args": [
+        "prometheus-mcp-server"
+      ],
+      "env": {
+        "PROMETHEUS_URL": "http://localhost:9090"
+      }
+    },
+    "victorialogs": {
+      "description": "VictoriaLogs: log search with LogsQL, log stats, log fields and streams",
+      "command": "bench/bin/mcp-victorialogs",
+      "args": [],
+      "env": {
+        "VL_INSTANCE_ENTRYPOINT": "http://localhost:9428"
+      }
+    },
+    "victoriametrics": {
+      "description": "VictoriaMetrics: MetricsQL queries, alerts, rules, cardinality, series, labels",
+      "command": "bench/bin/mcp-victoriametrics",
+      "args": [],
+      "env": {
+        "VM_INSTANCE_ENTRYPOINT": "http://localhost:8428",
+        "VM_INSTANCE_TYPE": "single"
+      }
+    },
+    "grafana": {
+      "description": "Grafana: dashboards, alerting, Loki logs, Tempo traces, Pyroscope profiles, OnCall, incidents, annotations",
+      "command": "bench/bin/mcp-grafana",
+      "args": [],
+      "env": {
+        "GRAFANA_URL": "http://localhost:3000",
+        "GRAFANA_API_KEY": "dummy-token-for-listing-only"
+      }
+    },
+    "sentry": {
+      "description": "Sentry: application errors and exceptions, issues, events, AI root cause analysis (Seer)",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@sentry/mcp-server@latest",
+        "--access-token=dummy-token-for-listing-only"
+      ],
+      "env": {
+        "SENTRY_ACCESS_TOKEN": "dummy-token-for-listing-only"
+      }
+    },
+    "datadog": {
+      "description": "Datadog: monitors, metrics, logs, APM traces, incidents, hosts, downtimes, RUM",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@winor30/mcp-server-datadog"
+      ],
+      "env": {
+        "DATADOG_API_KEY": "dummy-token-for-listing-only",
+        "DATADOG_APP_KEY": "dummy-token-for-listing-only"
+      }
+    },
+    "pagerduty": {
+      "description": "PagerDuty: incidents, on-call schedules, escalation policies, services, change events, status pages",
+      "command": "uvx",
+      "args": [
+        "pagerduty-mcp",
+        "--enable-write-tools"
+      ],
+      "env": {
+        "PAGERDUTY_USER_API_KEY": "dummy-token-for-listing-only"
+      }
+    },
+    "kubernetes": {
+      "description": "Kubernetes cluster: pods, deployments, logs, scaling, rollouts, helm charts, port-forward",
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-server-kubernetes"
+      ],
+      "env": {}
+    },
+    "terraform": {
+      "description": "Terraform Registry: providers, modules, policies and their versions/docs",
+      "command": "bench/bin/terraform-mcp-server",
+      "args": [
+        "stdio"
+      ],
+      "env": {}
+    },
+    "aws_cloudwatch": {
+      "description": "AWS CloudWatch: metrics, alarms, alarm history, Logs Insights queries over AWS log groups",
+      "command": "uvx",
+      "args": [
+        "awslabs.cloudwatch-mcp-server@latest"
+      ],
+      "env": {
+        "AWS_REGION": "us-east-1"
+      }
+    },
+    "github": {
+      "description": "GitHub: repositories, code search, issues, pull requests, Actions CI runs, releases, security alerts",
+      "command": "bench/bin/github-mcp-server",
+      "args": [
+        "stdio",
+        "--toolsets=all"
+      ],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "dummy-token-for-listing-only"
+      }
+    },
+    "git": {
+      "description": "Local git repository: status, diff, commit, branch, log",
+      "command": "uvx",
+      "args": [
+        "mcp-server-git"
+      ],
+      "env": {}
+    },
+    "atlassian": {
+      "description": "Jira (issues, sprints, boards, worklogs, SLAs, service desk) and Confluence (wiki pages, comments, attachments)",
+      "command": "uvx",
+      "args": [
+        "mcp-atlassian"
+      ],
+      "env": {
+        "JIRA_URL": "https://example.atlassian.net",
+        "JIRA_USERNAME": "a@b.c",
+        "JIRA_API_TOKEN": "dummy-token-for-listing-only",
+        "CONFLUENCE_URL": "https://example.atlassian.net/wiki",
+        "CONFLUENCE_USERNAME": "a@b.c",
+        "CONFLUENCE_API_TOKEN": "dummy-token-for-listing-only"
+      }
+    },
+    "notion": {
+      "description": "Notion workspace: pages, databases, blocks, comments, search",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@notionhq/notion-mcp-server"
+      ],
+      "env": {
+        "NOTION_TOKEN": "dummy-token-for-listing-only"
+      }
+    },
+    "slack": {
+      "description": "Slack: channels, post messages, thread replies, channel history, users",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-slack"
+      ],
+      "env": {
+        "SLACK_BOT_TOKEN": "dummy-token-for-listing-only",
+        "SLACK_TEAM_ID": "T000"
+      }
+    },
+    "postgres": {
+      "description": "PostgreSQL database: run read-only SQL queries",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "postgresql://localhost/db"
+      ],
+      "env": {}
+    },
+    "mongodb": {
+      "description": "MongoDB databases: collections, queries, aggregations, indexes, schemas",
+      "command": "npx",
+      "args": [
+        "-y",
+        "mongodb-mcp-server"
+      ],
+      "env": {}
+    },
+    "supabase": {
+      "description": "Supabase: projects, Postgres tables, SQL, migrations, logs, edge functions, branches",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--access-token=dummy-token-for-listing-only"
+      ],
+      "env": {}
+    },
+    "filesystem": {
+      "description": "Local filesystem: read, write, search and list files and directories",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "/tmp"
+      ],
+      "env": {}
+    },
+    "playwright": {
+      "description": "Browser automation: navigate web pages, click, type, take screenshots",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@latest"
+      ],
+      "env": {}
+    },
+    "fetch": {
+      "description": "Fetch a URL from the internet and return its content",
+      "command": "uvx",
+      "args": [
+        "mcp-server-fetch"
+      ],
+      "env": {}
+    },
+    "time": {
+      "description": "Current time and time zone conversion",
+      "command": "uvx",
+      "args": [
+        "mcp-server-time"
+      ],
+      "env": {}
+    },
+    "memory": {
+      "description": "Persistent knowledge graph memory: remember entities, relations and observations",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-memory"
+      ],
+      "env": {}
+    },
+    "context7": {
+      "description": "Up-to-date documentation and code examples for programming libraries and frameworks",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "env": {}
+    },
+    "google_maps": {
+      "description": "Google Maps: geocoding, places, directions, distances",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-google-maps"
+      ],
+      "env": {
+        "GOOGLE_MAPS_API_KEY": "dummy-token-for-listing-only"
+      }
+    }
+  }
+}
